@@ -1,0 +1,1139 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#05060b" />
+  <title>FEU • Axe Impeccable</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png">
+  <style>
+    :root{
+      --bg:#05060b;
+      --bg2:#070a14;
+      --laser:#f6fbff;
+      --laser2:#d7f2ff;
+      --ink:#c9d3df;
+      --muted:#8fa3b8;
+      --glass: rgba(255,255,255,.06);
+      --glass2: rgba(255,255,255,.10);
+      --stroke: rgba(255,255,255,.14);
+      --warn:#ffd1a8;
+      --ok:#b8ffd8;
+      --hot:#ffd3d3;
+      --cold:#d8e7ff;
+      --radius: 22px;
+      --radius2: 28px;
+      --shadow: 0 20px 50px rgba(0,0,0,.48);
+      --shadow2: 0 10px 25px rgba(0,0,0,.35);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: var(--sans);
+      background: radial-gradient(1200px 800px at 20% 10%, #0a0f22 0%, rgba(10,15,34,0) 60%),
+                  radial-gradient(900px 700px at 80% 0%, #0b1a2e 0%, rgba(11,26,46,0) 62%),
+                  radial-gradient(900px 700px at 60% 90%, #0a1529 0%, rgba(10,21,41,0) 60%),
+                  linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+      color: var(--ink);
+      overflow-x:hidden;
+    }
+    .safe{padding: env(safe-area-inset-top) env(safe-area-inset-right) calc(88px + env(safe-area-inset-bottom)) env(safe-area-inset-left);}
+    .wrap{max-width: 980px; margin:0 auto; padding: 18px 14px 0;}
+    .header{
+      display:flex; align-items:center; justify-content:space-between; gap:14px;
+      padding: 14px 14px 12px; border-radius: var(--radius2);
+      background: linear-gradient(135deg, rgba(255,255,255,.08) 0%, rgba(255,255,255,.04) 55%, rgba(255,255,255,.02) 100%);
+      border: 1px solid var(--stroke);
+      box-shadow: var(--shadow2);
+      position: sticky; top: 10px; z-index: 40; backdrop-filter: blur(10px);
+    }
+    .brand{display:flex; align-items:center; gap:12px;}
+    .sigil{
+      width:44px;height:44px;border-radius:14px;
+      background: radial-gradient(18px 18px at 30% 30%, rgba(246,251,255,.95) 0%, rgba(246,251,255,.10) 55%, rgba(246,251,255,.04) 100%),
+                  linear-gradient(135deg, rgba(255,255,255,.10) 0%, rgba(255,255,255,.03) 70%);
+      border:1px solid rgba(255,255,255,.22);
+      box-shadow: 0 0 0 1px rgba(255,255,255,.06) inset, 0 10px 22px rgba(0,0,0,.45);
+      position:relative;
+      overflow:hidden;
+    }
+    .sigil:before{
+      content:"";
+      position:absolute; inset:-40%;
+      background: conic-gradient(from 180deg, rgba(255,255,255,0) 0%, rgba(246,251,255,.25) 12%, rgba(255,255,255,0) 22%, rgba(255,255,255,0) 60%, rgba(246,251,255,.18) 72%, rgba(255,255,255,0) 86%);
+      animation: spin 8s linear infinite;
+      opacity:.9;
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .brand h1{font-size: 15px; margin:0; letter-spacing:.10em; text-transform:uppercase; color:var(--laser);}
+    .brand .sub{font-size:12px; margin-top:2px; color:var(--muted)}
+    .chiprow{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end}
+    .chip{
+      padding: 8px 10px; border-radius: 999px; font-size:12px;
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.05);
+      color: var(--laser2);
+      cursor:pointer;
+      user-select:none;
+      transition: transform .08s ease, background .15s ease;
+    }
+    .chip:active{transform: scale(.98)}
+    .chip.primary{background: rgba(246,251,255,.10); border-color: rgba(246,251,255,.25); color: var(--laser)}
+    .grid{display:grid; grid-template-columns: 1.2fr .8fr; gap: 14px; margin-top:14px}
+    @media (max-width: 880px){ .grid{grid-template-columns:1fr} }
+    .card{
+      border-radius: var(--radius2);
+      background: linear-gradient(135deg, rgba(255,255,255,.08) 0%, rgba(255,255,255,.04) 45%, rgba(255,255,255,.03) 100%);
+      border:1px solid var(--stroke);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .card:before{
+      content:"";
+      position:absolute; inset:-2px;
+      background: radial-gradient(500px 220px at 20% 0%, rgba(246,251,255,.12) 0%, rgba(246,251,255,0) 55%),
+                  radial-gradient(400px 200px at 90% 10%, rgba(255,210,210,.10) 0%, rgba(255,210,210,0) 60%),
+                  radial-gradient(500px 260px at 60% 110%, rgba(190,235,255,.10) 0%, rgba(190,235,255,0) 60%);
+      pointer-events:none;
+      opacity:.9;
+    }
+    .card > *{position:relative}
+    .card .head{padding:16px 16px 10px}
+    .kicker{font-family: var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color: var(--muted)}
+    .title{margin:6px 0 0; font-size:18px; color: var(--laser)}
+    .desc{margin:8px 0 0; font-size:13px; line-height:1.45; color: var(--ink)}
+    .section{padding: 12px 16px 16px; border-top:1px solid rgba(255,255,255,.10)}
+    .pillset{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px}
+    .pill{
+      padding: 10px 12px; border-radius: 16px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.04);
+      cursor:pointer; user-select:none;
+      transition: transform .08s ease, background .15s ease, border-color .15s ease;
+      font-size:13px;
+    }
+    .pill:active{transform: scale(.985)}
+    .pill.sel{background: rgba(246,251,255,.11); border-color: rgba(246,251,255,.30); color: var(--laser)}
+    .mini{font-size:12px; color: var(--muted); margin-top:8px}
+    .divider{height:1px; background: rgba(255,255,255,.12); margin: 14px 0}
+    .block{padding: 12px 14px; border-radius: 18px; background: rgba(0,0,0,.18); border:1px solid rgba(255,255,255,.12)}
+    .label{font-family: var(--mono); font-size:11px; letter-spacing:.12em; color: var(--muted); text-transform:uppercase}
+    .big{font-size:15px; color: var(--laser); margin:6px 0 0; line-height:1.35}
+    .small{margin:6px 0 0; font-size:13px; color: var(--ink); line-height:1.45}
+    .example{margin-top:8px; font-size:12.5px; color: var(--laser2); background: rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.12); padding:10px 12px; border-radius:16px}
+    .btnrow{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
+    .btn{
+      border:1px solid rgba(246,251,255,.22);
+      background: rgba(246,251,255,.08);
+      color: var(--laser);
+      padding: 11px 12px;
+      border-radius: 16px;
+      cursor:pointer;
+      font-size:13px;
+      transition: transform .08s ease, background .15s ease, border-color .15s ease;
+      user-select:none;
+    }
+    .btn:active{transform: scale(.985)}
+    .btn.ghost{background: rgba(255,255,255,.03); border-color: rgba(255,255,255,.14); color: var(--laser2)}
+    .btn.warn{background: rgba(255,209,168,.10); border-color: rgba(255,209,168,.25); color: var(--warn)}
+    .btn.ok{background: rgba(184,255,216,.10); border-color: rgba(184,255,216,.25); color: var(--ok)}
+    textarea{
+      width:100%; min-height: 104px; resize: vertical;
+      border-radius: 18px; border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      color: var(--ink);
+      padding: 12px 12px;
+      outline: none;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    textarea:focus{border-color: rgba(246,251,255,.26); box-shadow: 0 0 0 3px rgba(246,251,255,.08)}
+    .tabs{
+      position:fixed; left:0; right:0; bottom:0;
+      padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+      background: linear-gradient(180deg, rgba(5,6,11,0) 0%, rgba(5,6,11,.80) 25%, rgba(5,6,11,.96) 100%);
+      backdrop-filter: blur(10px);
+      z-index:60;
+    }
+    .tabbar{
+      max-width: 980px; margin:0 auto;
+      display:grid; grid-template-columns: repeat(4,1fr); gap:10px;
+    }
+    .tab{
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      color: var(--muted);
+      text-align:center;
+      padding: 10px 10px;
+      font-size:12px;
+      cursor:pointer;
+      user-select:none;
+      transition: background .15s ease, border-color .15s ease, transform .08s ease;
+    }
+    .tab:active{transform: scale(.99)}
+    .tab.on{color: var(--laser); background: rgba(246,251,255,.10); border-color: rgba(246,251,255,.24)}
+    .toast{
+      position:fixed; top: 18px; left:50%; transform: translateX(-50%);
+      padding: 10px 12px; border-radius: 14px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(10,12,20,.78);
+      backdrop-filter: blur(10px);
+      color: var(--laser2);
+      font-size: 13px;
+      box-shadow: 0 10px 22px rgba(0,0,0,.38);
+      z-index:100;
+      opacity:0; pointer-events:none;
+      transition: opacity .25s ease, transform .25s ease;
+    }
+    .toast.show{opacity:1; pointer-events:auto}
+    .glowline{
+      height:1px;
+      background: linear-gradient(90deg, rgba(246,251,255,0) 0%, rgba(246,251,255,.30) 18%, rgba(255,209,168,.26) 50%, rgba(246,251,255,.28) 82%, rgba(246,251,255,0) 100%);
+      margin: 10px 0;
+    }
+    .badge{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 7px 10px; border-radius: 999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.04);
+      font-size:12px; color: var(--laser2);
+    }
+    .dot{width:8px;height:8px;border-radius:99px;background: rgba(246,251,255,.75); box-shadow: 0 0 12px rgba(246,251,255,.25)}
+    .dot.hot{background: rgba(255,180,180,.90); box-shadow: 0 0 12px rgba(255,180,180,.22)}
+    .dot.cold{background: rgba(176,205,255,.95); box-shadow: 0 0 12px rgba(176,205,255,.22)}
+    .dot.ok{background: rgba(184,255,216,.92); box-shadow: 0 0 12px rgba(184,255,216,.22)}
+    .list{display:grid; gap:10px}
+    .row{display:flex; align-items:flex-start; justify-content:space-between; gap:10px}
+    .row strong{color:var(--laser)}
+    .muted{color:var(--muted)}
+    .tiny{font-size:11px; color: var(--muted)}
+    .toggle{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      padding: 10px 12px; border-radius: 18px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.16);
+    }
+    .switch{
+      width: 44px; height: 26px; border-radius: 999px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.07);
+      position:relative; cursor:pointer; user-select:none;
+    }
+    .knob{
+      width: 22px; height: 22px; border-radius: 99px;
+      background: rgba(246,251,255,.88);
+      position:absolute; top:1px; left:1px;
+      transition: left .15s ease;
+      box-shadow: 0 10px 20px rgba(0,0,0,.30);
+    }
+    .switch.on{background: rgba(246,251,255,.12); border-color: rgba(246,251,255,.26)}
+    .switch.on .knob{left:21px}
+    .footerpad{height:18px}
+  </style>
+</head>
+<body>
+  <div class="toast" id="toast"></div>
+  <div class="safe">
+    <div class="wrap">
+      <div class="header">
+        <div class="brand">
+          <div class="sigil" aria-hidden="true"></div>
+          <div>
+            <h1>FEU • Axe Impeccable</h1>
+            <div class="sub">La Vie est méditation. La vie s’invite comme solution.</div>
+          </div>
+        </div>
+        <div class="chiprow">
+          <div class="chip" id="chipDay">Jour <span id="dayNum">1</span>/7</div>
+          <div class="chip primary">Sceau: <span id="sealName">—</span></div>
+        </div>
+      </div>
+
+      <div id="viewToday" class="view">
+        <div class="grid">
+          <div class="card">
+            <div class="head">
+              <div class="kicker">Pyramide olfactive du jour</div>
+              <div class="title">Matin • Midi • Soir</div>
+              <div class="desc">Trois touches, une minute. La santé, c’est le Parfum écogénésique du corps-Cathédrale.</div>
+              <div class="pillset" style="margin-top:12px">
+                <div class="pill" data-ritual="morning">Note de tête</div>
+                <div class="pill" data-ritual="noon">Note de cœur</div>
+                <div class="pill" data-ritual="evening">Note de fond</div>
+              </div>
+              <div class="mini" id="ritualHint">Choisis une touche. Le reste suit.</div>
+            </div>
+            <div class="section" id="ritualBox" style="display:none">
+              <div class="block">
+                <div class="label" id="ritualLabel">—</div>
+                <div class="big" id="ritualText">—</div>
+                <div class="example" id="ritualExample">—</div>
+                <div class="btnrow">
+                  <div class="btn ok" id="btnMarkRitual">Marquer comme fait</div>
+                  <div class="btn ghost" id="btnChime">Son bref</div>
+                  <div class="btn ghost" id="btnLamp">Lampe du Réel</div>
+                </div>
+                <div class="tiny" id="ritualDoneHint"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="head">
+              <div class="kicker">Mon Feu aujourd’hui</div>
+              <div class="title">Thermomètre</div>
+              <div class="desc">Choisis l’état. L’outil s’affiche.</div>
+              <div class="pillset">
+                <div class="pill" data-fire="hot">Intense</div>
+                <div class="pill" data-fire="low">Bas</div>
+                <div class="pill" data-fire="just">Juste</div>
+              </div>
+              <div class="glowline"></div>
+              <div class="block" id="toolBox">
+                <div class="label" id="toolLabel">Outil</div>
+                <div class="big" id="toolTitle">—</div>
+                <div class="small" id="toolSteps">—</div>
+                <div class="example" id="toolExample">—</div>
+                <div class="btnrow">
+                  <div class="btn ok" id="btnToolDone">Je l’ai fait</div>
+                  <div class="btn ghost" id="btnRel">Intelligence relationnelle</div>
+                  <div class="btn ghost" id="btnPointZero">Point Zéro</div>
+                </div>
+              </div>
+              <div class="divider"></div>
+              <div class="block">
+                <div class="label">Geste inattendu</div>
+                <div class="big">La Lampe du Réel</div>
+                <div class="small">Deux doigts sur le sternum. Expiration longue. “Je chauffe la Vie. Je tiens la tenue.” Puis une action utile, minuscule.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid" style="margin-top:14px">
+          <div class="card">
+            <div class="head">
+              <div class="kicker">Accord du jour</div>
+              <div class="title" id="dayTitle">—</div>
+              <div class="desc" id="dayWhy">—</div>
+            </div>
+            <div class="section">
+              <div class="list">
+                <div class="block">
+                  <div class="label">Phrase-cap</div>
+                  <div class="big" id="phraseCap">—</div>
+                  <div class="example" id="phraseEx">—</div>
+                </div>
+                <div class="block">
+                  <div class="label">Accord dans la Vie</div>
+                  <div class="big" id="accord">—</div>
+                  <div class="example" id="accordEx">—</div>
+                </div>
+                <div class="block">
+                  <div class="label">Micro-pratique</div>
+                  <div class="big" id="micro">—</div>
+                  <div class="example" id="microEx">—</div>
+                </div>
+                <div class="block">
+                  <div class="label">Question</div>
+                  <div class="big" id="question">—</div>
+                  <div class="example" id="questionEx">—</div>
+                </div>
+              </div>
+
+              <div class="btnrow" style="margin-top:14px">
+                <div class="btn ok" id="btnDayDone">J’ai fait mon Accord</div>
+                <div class="btn ghost" id="btnNote">Écrire 3 lignes</div>
+                <div class="btn ghost" id="btnShareMini">Partager (sobre)</div>
+              </div>
+
+              <div id="noteBox" style="display:none; margin-top:12px">
+                <textarea id="noteText" placeholder="Trois lignes. Une victoire. Un ajustement. Une continuité."></textarea>
+                <div class="btnrow">
+                  <div class="btn ok" id="btnSaveNote">Enregistrer</div>
+                  <div class="btn ghost" id="btnCloseNote">Fermer</div>
+                </div>
+              </div>
+
+              <div class="tiny" id="dayDoneHint"></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="head">
+              <div class="kicker">Semaine</div>
+              <div class="title">Progression</div>
+              <div class="desc">Sept jours. Puis Conseil Systémique et Carte.</div>
+            </div>
+            <div class="section">
+              <div class="list" id="weekList"></div>
+              <div class="divider"></div>
+              <div class="block">
+                <div class="label">Défi</div>
+                <div class="big">3 réponses lentes</div>
+                <div class="small">Une expiration longue. Une phrase courte. Une proposition claire.</div>
+                <div class="btnrow">
+                  <div class="btn ok" id="btnChallenge">Ouvrir le défi</div>
+                  <div class="btn ghost" id="btn3P">Protocole 3P</div>
+                </div>
+              </div>
+              <div class="divider"></div>
+              <div class="block">
+                <div class="label">Conseil Systémique</div>
+                <div class="big">Le verdict doux</div>
+                <div class="small">À la fin du Jour 7 : axes, victoire, continuité.</div>
+                <div class="btnrow">
+                  <div class="btn ok" id="btnCouncil">Ouvrir</div>
+                  <div class="btn ghost" id="btnCards">Récompenses</div>
+                </div>
+                <div class="tiny" id="councilHint"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="footerpad"></div>
+      </div>
+
+      <div id="viewWeek" class="view" style="display:none">
+        <div class="card">
+          <div class="head">
+            <div class="kicker">Semaine FEU</div>
+            <div class="title">7 jours</div>
+            <div class="desc">Ouvre un jour, pratique, coche.</div>
+          </div>
+          <div class="section">
+            <div class="list" id="weekListFull"></div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:14px">
+          <div class="head">
+            <div class="kicker">Conseil Systémique</div>
+            <div class="title">5 axes, 2 minutes</div>
+            <div class="desc">Coche bas, moyen, stable. Puis scelle.</div>
+          </div>
+          <div class="section" id="councilForm"></div>
+        </div>
+
+        <div class="footerpad"></div>
+      </div>
+
+      <div id="viewRewards" class="view" style="display:none">
+        <div class="grid">
+          <div class="card">
+            <div class="head">
+              <div class="kicker">Sceaux</div>
+              <div class="title">Braise • Lampe • Phare</div>
+              <div class="desc">Le sceau marque l’architecture. La carte active les sens.</div>
+            </div>
+            <div class="section">
+              <div class="list" id="sealList"></div>
+              <div class="divider"></div>
+              <div class="block">
+                <div class="label">Partage sobre</div>
+                <div class="big">Semaine FEU, sceau obtenu : <span id="shareSeal">—</span></div>
+                <div class="small">Je chauffe la Vie, avec tenue.</div>
+                <div class="btnrow">
+                  <div class="btn ok" id="btnShare">Copier</div>
+                  <div class="btn ghost" id="btnShare2">Partager</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="head">
+              <div class="kicker">Cartes multisensorielles</div>
+              <div class="title">Griffes</div>
+              <div class="desc">Visuel. Toucher. Son. Senteur. Action Réel.</div>
+            </div>
+            <div class="section">
+              <div class="list" id="cardList"></div>
+            </div>
+          </div>
+        </div>
+        <div class="footerpad"></div>
+      </div>
+
+      <div id="viewSettings" class="view" style="display:none">
+        <div class="grid">
+          <div class="card">
+            <div class="head">
+              <div class="kicker">Réglages</div>
+              <div class="title">Sensations</div>
+              <div class="desc">Tout reste à ton service.</div>
+            </div>
+            <div class="section">
+              <div class="toggle">
+                <div><strong>Son bref</strong><div class="tiny">Tintement 2–3 secondes.</div></div>
+                <div class="switch" data-toggle="sound"><div class="knob"></div></div>
+              </div>
+              <div style="height:10px"></div>
+              <div class="toggle">
+                <div><strong>Vibration</strong><div class="tiny">Android surtout. iPhone varie.</div></div>
+                <div class="switch" data-toggle="vibe"><div class="knob"></div></div>
+              </div>
+              <div style="height:10px"></div>
+              <div class="toggle">
+                <div><strong>Senteur optionnelle</strong><div class="tiny">Savon, agrume, boisson chaude, air frais.</div></div>
+                <div class="switch" data-toggle="scent"><div class="knob"></div></div>
+              </div>
+              <div class="divider"></div>
+              <div class="block">
+                <div class="label">Rappels</div>
+                <div class="big">Matin • Midi • Soir</div>
+                <div class="small">Astuce premium : crée 3 rappels dans “Rappels” ou “Calendrier”.</div>
+                <div class="btnrow">
+                  <div class="btn ok" id="btnReminderText">Copier texte</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="head">
+              <div class="kicker">Données</div>
+              <div class="title">Sauvegarde locale</div>
+              <div class="desc">Tout reste sur ton appareil.</div>
+            </div>
+            <div class="section">
+              <div class="block">
+                <div class="label">Exporter</div>
+                <div class="big">Mes notes</div>
+                <div class="small">Exporte tes notes en texte.</div>
+                <div class="btnrow">
+                  <div class="btn ok" id="btnExport">Exporter</div>
+                  <div class="btn ghost" id="btnReset">Réinitialiser</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="footerpad"></div>
+      </div>
+
+      <div id="modal" style="display:none; position:fixed; inset:0; background: rgba(0,0,0,.62); backdrop-filter: blur(6px); z-index:120; padding: 18px;">
+        <div style="max-width: 760px; margin: 0 auto; margin-top: 10vh;" class="card">
+          <div class="head">
+            <div class="kicker" id="modalKicker">—</div>
+            <div class="title" id="modalTitle">—</div>
+            <div class="desc" id="modalDesc">—</div>
+          </div>
+          <div class="section" id="modalBody"></div>
+          <div class="section" style="border-top:1px solid rgba(255,255,255,.10); display:flex; justify-content:flex-end; gap:10px;">
+            <div class="btn ghost" id="btnCloseModal">Fermer</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="tabs">
+    <div class="tabbar">
+      <div class="tab on" data-tab="today">Aujourd’hui</div>
+      <div class="tab" data-tab="week">Semaine</div>
+      <div class="tab" data-tab="rewards">Récompenses</div>
+      <div class="tab" data-tab="settings">Réglages</div>
+    </div>
+  </div>
+
+<script>
+  const DATA_KEY = "feu_axi_v1";
+  const $ = (q)=>document.querySelector(q);
+  const $$ = (q)=>Array.from(document.querySelectorAll(q));
+
+  const FEU = {
+    tools: {
+      hot: { label:"Outil • Feu intense", title:"Refroidissement Noble, 20 secondes",
+        steps:"Expire plus long que tu n’inspires, trois fois. Mâchoire souple, langue au palais. Puis : “Je reviens vers toi dans deux minutes.”",
+        ex:"Un message pique. Trois expirations longues. Je reviens avec une proposition claire." },
+      low: { label:"Outil • Feu bas", title:"L’Allumette, 90 secondes",
+        steps:"Choisis la version la plus petite de l’action. Lance 90 secondes. Ajuste ensuite, avec douceur.",
+        ex:"J’ouvre le document. Deux lignes. Le Feu revient par le geste." },
+      just:{ label:"Outil • Feu juste", title:"Flamme dirigée",
+        steps:"Une intention unique. Une action. Puis fermeture. Une respiration dans le corps.",
+        ex:"Je réponds à un message précis, puis je ferme et je reviens au Réel." }
+    },
+    rituals: {
+      morning:{ label:"Note de tête, matin, 45 secondes",
+        text:"Mini scan 4D : Corps-Cathédrale, Souffle, Champ émotionnel, Réel. Puis : “Je choisis une action utile, petite, et je la fais tôt.”",
+        ex:"Je me redresse. J’expire long. Je fais une démarche de 2 minutes avant les notifications." },
+      noon:{ label:"Note de cœur, midi, 30 secondes",
+        text:"Je choisis : Feu intense, bas, juste. L’outil s’affiche. Puis une proposition claire.",
+        ex:"Je sens l’impatience. Refroidissement Noble. Puis : “Je reviens à 18h.”" },
+      evening:{ label:"Note de fond, soir, 60 secondes",
+        text:"Je scelle : “Ce que mon Feu a servi. Ce que mon Feu ajuste demain.” Puis une décision minuscule.",
+        ex:"J’ai tenu une limite. Demain, je protège mon matin, 10 minutes sans écran." }
+    },
+    lamp:{ title:"La Lampe du Réel",
+      steps:"Deux doigts sur le sternum. Expiration longue. “Je chauffe la Vie. Je tiens la tenue.” Puis une action utile, minuscule.",
+      ex:"Avant d’ouvrir le téléphone, je fais la Lampe du Réel, puis j’envoie un message propre." },
+    pointZero:{ title:"Point Zéro",
+      steps:"Je touche une surface réelle 2 secondes. Je sens le contact. Je reviens aux appuis. Puis je choisis une action.",
+      ex:"Main sur la table. Deux secondes. Puis je commence une tâche de 90 secondes." },
+    rel:{
+      title:"Intelligence relationnelle, Protocole 3P",
+      steps:"Pause : une expiration longue. Présence : “Je t’ai lu.” Proposition : “Je reviens à 18h.”",
+      scripts:[
+        {k:"Feu intense", t:"Je t’ai lu. Je réponds dans deux minutes. Je reviens avec une proposition claire."},
+        {k:"Feu bas", t:"Je veux être juste. J’ai besoin d’une minute. Je reviens avec une réponse simple."},
+        {k:"Feu juste", t:"Voilà ce que je peux faire aujourd’hui. Voilà ce que je garde pour demain."},
+      ]
+    },
+    challenge:{ title:"Défi • 3 réponses lentes",
+      steps:"Une expiration longue. Une phrase courte. Une proposition claire. Trois fois, dans la journée.",
+      ex:"“Je t’ai lu. Je reviens à 18h. Voilà ce que je propose.”" },
+    days:[
+      {name:"Jour 1 • Allumage",
+       why:"Le Feu commence par un geste utile, petit, immédiat. La Vie s’invite comme solution.",
+       phrase:"Feu. Ici, tu passes de l’intention à l’élan juste.", phraseEx:"Je commence par un geste utile, avant de nourrir le bruit.",
+       accord:"Choisis une action simple que tu repousses.", accordEx:"Un mail important, un rendez-vous à prendre, une démarche courte.",
+       micro:"Colonne haute. Une expiration longue. Puis action.", microEx:"Trois lignes. Envoi. Terminé.",
+       question:"Quel poids quitte ton champ quand tu fais le premier pas.", questionEx:"La pression tombe, l’esprit s’ouvre."},
+      {name:"Jour 2 • Chaleur utile",
+       why:"Le Feu relationnel devient chaleur simple, tenue nette.",
+       phrase:"Feu. Ici, ta chaleur sert la Vie.", phraseEx:"Je parle chaud, je reste net.",
+       accord:"Dans un échange, choisis un ton plus humain, plus simple.", accordEx:"“Merci. Voilà ce que je propose.”",
+       micro:"Protocole 3P : Pause, Présence, Proposition.", microEx:"“Je t’ai lu. Je reviens à 18h avec une réponse claire.”",
+       question:"Qu’est-ce qui s’ouvre quand ta chaleur devient stable.", questionEx:"La relation se détend, l’écoute revient."},
+      {name:"Jour 3 • Flamme dirigée",
+       why:"La technologie devient outil. Ton attention redevient souveraine.",
+       phrase:"Feu. Ici, ton attention devient une flamme dirigée.", phraseEx:"J’ouvre l’écran avec une intention unique.",
+       accord:"Donne une intention unique à ton ouverture d’écran.", accordEx:"Je réponds à un message précis, puis je sors.",
+       micro:"Une app. Une action. Fermeture. Une respiration.", microEx:"Je ferme, je sens mes appuis, je reviens au Réel.",
+       question:"Quelle liberté apparaît quand la flamme reste sur une seule mèche.", questionEx:"Je récupère du temps et mon calme."},
+      {name:"Jour 4 • Décision maâttropique",
+       why:"Le Feu tranche avec tenue. Une décision simple, un acte clair.",
+       phrase:"Maâttropie. Ici, le Feu choisit juste, avec tenue.", phraseEx:"Je tranche, je pose un geste, je cesse de tourner.",
+       accord:"Prends une décision simple et pose un premier acte.", accordEx:"Je fixe un créneau. J’envoie l’invitation.",
+       micro:"Écris : “Je choisis … parce que …” puis action.", microEx:"“Je choisis la clarté parce que je respecte mon énergie.”",
+       question:"Qu’est-ce qui devient cohérent dès que tu assumes.", questionEx:"Le corps se détend, l’esprit s’aligne."},
+      {name:"Jour 5 • Puissance ajustée",
+       why:"La constance naît quand tu ajustes la puissance au lieu de forcer.",
+       phrase:"Feu. Ici, tu ajustes la puissance.", phraseEx:"Je fais moins, je fais mieux.",
+       accord:"Transforme l’action en version courte, puis avance.", accordEx:"Je choisis la version 2 minutes.",
+       micro:"L’Allumette : 90 secondes, puis ajustement.", microEx:"90 secondes de rangement, puis je sens la suite.",
+       question:"Quelle victoire douce naît quand tu respectes ta puissance du moment.", questionEx:"La constance remplace la pression."},
+      {name:"Jour 6 • Limite élégante",
+       why:"Une limite claire protège ton Réel. Le Feu devient cadre, sans dureté.",
+       phrase:"Feu. Ici, tu poses une limite élégante.", phraseEx:"Je clarifie un cadre, je garde une chaleur simple.",
+       accord:"Choisis une limite simple et formule-la avec Présence.", accordEx:"“Je te réponds ce soir.” “Je clôture à 19h.”",
+       micro:"Script 3P : “Je t’ai lu. Je te réponds ce soir. Voilà ce que je propose.”", microEx:"Une phrase, une proposition, un calme.",
+       question:"Qu’est-ce que ta limite protège.", questionEx:"Mon sommeil, ma famille, mon Axe, mon Réel."},
+      {name:"Jour 7 • Scellement",
+       why:"Le Feu se transforme en continuité. Cathédrale. Lampe. Tenue.",
+       phrase:"Cathédrale. Ici, le Feu devient une lampe.", phraseEx:"Je transforme mon élan en continuité.",
+       accord:"Choisis un rituel de continuité pour la semaine suivante.", accordEx:"3 minutes de posture avant d’ouvrir les messages.",
+       micro:"Décide une pratique de 3 minutes quotidienne. Note-la.", microEx:"3 minutes de marche lente, sans écran, en sentant mes appuis.",
+       question:"Quelle flamme tu gardes quand la semaine change.", questionEx:"La flamme de la décision simple, faite tôt, avec tenue."},
+    ],
+    seals:[
+      {name:"Braise", req:(s)=>s.dayDone.filter(Boolean).length>=4},
+      {name:"Lampe", req:(s)=>s.dayDone.filter(Boolean).length>=6 && s.weeklyDone},
+      {name:"Phare", req:(s)=>s.dayDone.filter(Boolean).length>=7 && s.council.filled},
+    ],
+    cards:{
+      braise:{ title:"Braise… Ici, la volonté devient tenue.",
+        senses:[["Geste","Point Zéro, 2 secondes."],["Toucher","Main sur une surface réelle, contact net."],["Son","Pulsation douce, 2 secondes."],["Senteur","Savon ou agrume, 3 secondes, option."],["Clef","Je choisis le moule avant la matière."],["Action Réel","Une action utile, 2 minutes."]] },
+      lampe:{ title:"Lampe… Ici, la force devient chaleur utile, et la Vie respire.",
+        senses:[["Geste","La Lampe du Réel, 20 secondes."],["Toucher","Deux doigts sur le sternum, contact léger."],["Son","Tintement bref, 3 secondes."],["Senteur","Boisson chaude, 3 secondes, option."],["Clef","Ma Présence précède mes mots."],["Action Réel","Un message propre, une proposition claire."]] },
+      phare:{ title:"Phare… Ici, tu tiens l’Axe au milieu du monde, et le Réel te répond.",
+        senses:[["Geste","Réponse lente, protocole 3P."],["Toucher","Appuis égaux, épaules basses, regard stable."],["Son","Double pulsation, longue puis courte."],["Senteur","Air frais à la fenêtre, 5 secondes, option."],["Clef","Je scelle la cohérence, et la réalité suit."],["Action Réel","Une limite élégante, posée calmement."]] },
+    }
+  };
+
+  const defaultState = {
+    dayIndex:0,
+    fireState:"just",
+    ritualsDone:{morning:false,noon:false,evening:false},
+    dayDone:Array(7).fill(false),
+    notes:Array(7).fill(""),
+    weeklyDone:false,
+    council:{filled:false, axes:{body:"moyen",breath:"moyen",rel:"moyen",tech:"moyen",real:"moyen"}, summary:""},
+    challenge:{done:[false,false,false]},
+    settings:{sound:true,vibe:false,scent:true}
+  };
+
+  let state = load();
+
+  function load(){
+    try{
+      const raw = localStorage.getItem(DATA_KEY);
+      if(!raw) return structuredClone(defaultState);
+      const s = JSON.parse(raw);
+      return {...structuredClone(defaultState), ...s};
+    }catch(e){ return structuredClone(defaultState); }
+  }
+  function save(){
+    localStorage.setItem(DATA_KEY, JSON.stringify(state));
+    refreshAll();
+  }
+  function toast(msg){
+    const t=$("#toast");
+    t.textContent=msg;
+    t.classList.add("show");
+    setTimeout(()=>t.classList.remove("show"), 1600);
+  }
+  function vibrate(pattern){
+    if(!state.settings.vibe) return;
+    if(navigator.vibrate) navigator.vibrate(pattern);
+  }
+  function chime(){
+    if(!state.settings.sound) return;
+    try{
+      const ctx = new (window.AudioContext||window.webkitAudioContext)();
+      const o=ctx.createOscillator(); const g=ctx.createGain();
+      o.type="sine"; o.frequency.value=880; g.gain.value=0.0001;
+      o.connect(g); g.connect(ctx.destination); o.start();
+      const now=ctx.currentTime;
+      g.gain.exponentialRampToValueAtTime(0.18, now+0.02);
+      o.frequency.exponentialRampToValueAtTime(660, now+0.12);
+      g.gain.exponentialRampToValueAtTime(0.0001, now+0.35);
+      o.stop(now+0.38);
+      setTimeout(()=>ctx.close(), 520);
+    }catch(e){}
+  }
+
+  function computeSeal(){
+    let got="—";
+    for(const s of FEU.seals){
+      if(s.req(state)) got=s.name;
+    }
+    return got;
+  }
+
+  function setTab(tab){
+    $$(".tab").forEach(x=>x.classList.toggle("on", x.dataset.tab===tab));
+    $("#viewToday").style.display = tab==="today" ? "" : "none";
+    $("#viewWeek").style.display = tab==="week" ? "" : "none";
+    $("#viewRewards").style.display = tab==="rewards" ? "" : "none";
+    $("#viewSettings").style.display = tab==="settings" ? "" : "none";
+    if(tab==="week") fillWeekFull();
+  }
+
+  function openModal(kicker,title,desc,bodyHtml){
+    $("#modalKicker").textContent=kicker;
+    $("#modalTitle").textContent=title;
+    $("#modalDesc").textContent=desc||"";
+    $("#modalBody").innerHTML=bodyHtml||"";
+    $("#modal").style.display="block";
+  }
+  function closeModal(){ $("#modal").style.display="none"; }
+
+  function refreshDay(){
+    const d=FEU.days[state.dayIndex];
+    $("#dayNum").textContent = String(state.dayIndex+1);
+    $("#sealName").textContent = computeSeal();
+
+    $("#dayTitle").textContent=d.name;
+    $("#dayWhy").textContent=d.why;
+
+    $("#phraseCap").textContent=d.phrase;
+    $("#phraseEx").textContent="Exemple concret : "+d.phraseEx;
+
+    $("#accord").textContent=d.accord;
+    $("#accordEx").textContent="Exemple concret : "+d.accordEx;
+
+    $("#micro").textContent=d.micro;
+    $("#microEx").textContent="Exemple concret : "+d.microEx;
+
+    $("#question").textContent=d.question;
+    $("#questionEx").textContent="Exemple concret : "+d.questionEx;
+
+    $("#dayDoneHint").textContent = state.dayDone[state.dayIndex] ? "Accord marqué comme fait. La Vie te remercie." : "";
+    $("#noteText").value = state.notes[state.dayIndex] || "";
+  }
+
+  function refreshTool(){
+    const t=FEU.tools[state.fireState];
+    $("#toolLabel").textContent=t.label;
+    $("#toolTitle").textContent=t.title;
+    $("#toolSteps").textContent=t.steps;
+    $("#toolExample").textContent="Exemple concret : "+t.ex;
+
+    $$(".pill[data-fire]").forEach(p=>p.classList.toggle("sel", p.dataset.fire===state.fireState));
+  }
+
+  function refreshWeek(){
+    const list=$("#weekList");
+    list.innerHTML="";
+    for(let i=0;i<7;i++){
+      const done=state.dayDone[i];
+      const item=document.createElement("div");
+      item.className="toggle";
+      item.style.cursor="pointer";
+      item.innerHTML=`
+        <div>
+          <strong style="color:var(--laser)">${FEU.days[i].name}</strong>
+          <div class="tiny">${done ? "Accord scellé." : "À faire."}</div>
+        </div>
+        <div class="badge"><span class="dot ${done?'ok':'cold'}"></span>${done?"Fait":"—"}</div>
+      `;
+      item.onclick=()=>{state.dayIndex=i; save(); setTab("today"); toast("Jour ouvert.");};
+      list.appendChild(item);
+    }
+    const daysDone = state.dayDone.filter(Boolean).length;
+    $("#councilHint").textContent = daysDone>=7 ? "Semaine complète. Conseil prêt." : "Complète les 7 jours pour sceller le Conseil.";
+  }
+
+  function fillWeekFull(){
+    const full=$("#weekListFull");
+    full.innerHTML="";
+    for(let i=0;i<7;i++){
+      const done=state.dayDone[i];
+      const item=document.createElement("div");
+      item.className="toggle";
+      item.style.cursor="pointer";
+      item.innerHTML=`
+        <div>
+          <strong style="color:var(--laser)">${FEU.days[i].name}</strong>
+          <div class="tiny">${done ? "Accord scellé." : "À faire."}</div>
+        </div>
+        <div class="badge"><span class="dot ${done?'ok':'cold'}"></span>${done?"Fait":"—"}</div>
+      `;
+      item.onclick=()=>{state.dayIndex=i; save(); setTab("today"); toast("Jour ouvert.");};
+      full.appendChild(item);
+    }
+  }
+
+  function refreshRewards(){
+    $("#shareSeal").textContent = computeSeal();
+
+    const sealList=$("#sealList"); sealList.innerHTML="";
+    FEU.seals.forEach(s=>{
+      const got=s.req(state);
+      const b=document.createElement("div");
+      b.className="block";
+      b.style.opacity = got ? 1 : .65;
+      b.innerHTML=`
+        <div class="row">
+          <div><strong>${s.name}</strong></div>
+          <div class="tiny">${got ? "Obtenu" : "À venir"}</div>
+        </div>
+        <div class="example">${s.name==="Braise"?"4 jours complétés.":s.name==="Lampe"?"6 jours + bilan.":"7 jours + conseil."}</div>
+      `;
+      sealList.appendChild(b);
+    });
+
+    const cardList=$("#cardList"); cardList.innerHTML="";
+    const daysDone = state.dayDone.filter(Boolean).length;
+    const unlocked = new Set();
+    if(daysDone>=4) unlocked.add("braise");
+    if(daysDone>=6 && state.weeklyDone) unlocked.add("lampe");
+    if(daysDone>=7 && state.council.filled) unlocked.add("phare");
+
+    ["braise","lampe","phare"].forEach(k=>{
+      const c=FEU.cards[k];
+      const ok=unlocked.has(k);
+      const b=document.createElement("div");
+      b.className="block";
+      b.style.opacity = ok ? 1 : .62;
+      b.innerHTML=`
+        <div class="row"><div><strong>${c.title}</strong></div><div class="tiny">${ok?"Disponible":"Verrouillée"}</div></div>
+        <div class="divider"></div>
+        <div class="list">
+          ${c.senses.map(s=>`<div class="row"><div class="muted">${s[0]}</div><div style="text-align:right; max-width:70%">${s[1]}</div></div>`).join("")}
+        </div>
+      `;
+      cardList.appendChild(b);
+    });
+  }
+
+  function refreshSettings(){
+    $$(".switch[data-toggle]").forEach(sw=>{
+      const key=sw.dataset.toggle;
+      sw.classList.toggle("on", !!state.settings[key]);
+      sw.onclick=()=>{
+        state.settings[key]=!state.settings[key];
+        save();
+        toast("Réglage mis à jour.");
+      };
+    });
+  }
+
+  function buildCouncilForm(){
+    const axes=[
+      {id:"body", name:"Corps-Cathédrale", hint:"posture, regard, mâchoire"},
+      {id:"breath", name:"Souffle", hint:"rythme, expiration"},
+      {id:"rel", name:"Intelligence relationnelle", hint:"ton, vitesse, limites"},
+      {id:"tech", name:"Technologie", hint:"intention unique, flamme dirigée"},
+      {id:"real", name:"Réel", hint:"action concrète, décision simple"},
+    ];
+    const wrap=document.createElement("div");
+    wrap.className="list";
+    axes.forEach(a=>{
+      const b=document.createElement("div");
+      b.className="block";
+      b.innerHTML=`
+        <div class="row">
+          <div>
+            <div class="label">${a.name}</div>
+            <div class="tiny">${a.hint}</div>
+          </div>
+          <div class="pillset" style="justify-content:flex-end; margin:0">
+            <div class="pill" data-axis="${a.id}" data-val="bas">Bas</div>
+            <div class="pill" data-axis="${a.id}" data-val="moyen">Moyen</div>
+            <div class="pill" data-axis="${a.id}" data-val="stable">Stable</div>
+          </div>
+        </div>
+      `;
+      wrap.appendChild(b);
+    });
+
+    const out=document.createElement("div");
+    out.className="block";
+    out.innerHTML=`
+      <div class="label">Sortie</div>
+      <div class="big" id="councilOut">Complète les axes, puis scelle.</div>
+      <div class="btnrow">
+        <div class="btn ok" id="btnSealCouncil">Sceller le Conseil</div>
+        <div class="btn ghost" id="btnCouncilShare">Copier la synthèse</div>
+      </div>
+      <div class="tiny" id="councilOutHint"></div>
+    `;
+    wrap.appendChild(out);
+
+    $("#councilForm").innerHTML="";
+    $("#councilForm").appendChild(wrap);
+
+    $$(".pill[data-axis]").forEach(p=>{
+      const axis=p.dataset.axis, val=p.dataset.val;
+      p.classList.toggle("sel", state.council.axes[axis]===val);
+      p.onclick=()=>{
+        state.council.axes[axis]=val;
+        $$(".pill[data-axis='"+axis+"']").forEach(x=>x.classList.toggle("sel", x.dataset.val===val));
+        save();
+      };
+    });
+
+    $("#btnSealCouncil").onclick=()=>{
+      const ax=state.council.axes;
+      const stable=Object.values(ax).filter(v=>v==="stable").length;
+      const bas=Object.values(ax).filter(v=>v==="bas").length;
+      let dominant="just";
+      if(bas>=3) dominant="low";
+      if(ax.rel==="bas" && ax.breath==="bas") dominant="hot";
+      if(stable>=4) dominant="just";
+
+      const victory = (ax.rel==="stable") ? "Tu as posé une limite avec chaleur." :
+                      (ax.real==="stable") ? "Tu as transformé l’élan en action utile." :
+                      "Tu as gardé une chaleur simple au milieu du monde.";
+      const continuity = (dominant==="hot") ? "Une réponse lente par jour, avec proposition claire." :
+                         (dominant==="low") ? "L’Allumette, 90 secondes, chaque matin." :
+                         "Une intention unique par ouverture d’écran.";
+      const summary = `Feu dominant : ${dominant==="hot"?"Intense":(dominant==="low"?"Bas":"Juste")}.
+Victoire maâttropique : ${victory}
+Continuité : ${continuity}`;
+
+      state.council.filled=true;
+      state.council.summary=summary;
+      state.fireState=dominant;
+      save();
+      $("#councilOut").textContent = summary.replaceAll("\n"," ");
+      $("#councilOutHint").textContent = "Carte Phare disponible si la semaine est complète.";
+      toast("Conseil scellé.");
+      vibrate([160,60,90]);
+    };
+
+    $("#btnCouncilShare").onclick=async ()=>{
+      const txt=state.council.summary || "Conseil Systémique • FEU";
+      try{ await navigator.clipboard.writeText(txt); toast("Synthèse copiée."); }catch(e){ toast("Copie indisponible."); }
+    };
+
+    $("#councilOut").textContent = state.council.filled ? state.council.summary.replaceAll("\n"," ") : "Complète les axes, puis scelle.";
+    $("#councilOutHint").textContent = state.council.filled ? "Conseil déjà scellé." : "";
+  }
+
+  function refreshRitual(active){
+    $$(".pill[data-ritual]").forEach(p=>p.classList.toggle("sel", p.dataset.ritual===active));
+    if(!active){
+      $("#ritualBox").style.display="none";
+      $("#ritualHint").textContent="Choisis une touche. Le reste suit.";
+      return;
+    }
+    const r=FEU.rituals[active];
+    $("#ritualBox").style.display="";
+    $("#ritualLabel").textContent=r.label;
+    $("#ritualText").textContent=r.text;
+    $("#ritualExample").textContent="Exemple concret : "+r.ex;
+    $("#ritualDoneHint").textContent = state.ritualsDone[active] ? "Touché. Scellé." : "";
+    $("#ritualHint").textContent="Une minute. Puis le Réel.";
+  }
+
+  function refreshAll(){
+    refreshDay();
+    refreshTool();
+    refreshWeek();
+    refreshRewards();
+    refreshSettings();
+    buildCouncilForm();
+  }
+
+  // tabs
+  $$(".tab").forEach(t=>t.onclick=()=>setTab(t.dataset.tab));
+
+  // ritual
+  let activeRitual=null;
+  $$(".pill[data-ritual]").forEach(p=>{
+    p.onclick=()=>{activeRitual=p.dataset.ritual; refreshRitual(activeRitual);};
+  });
+  $("#btnMarkRitual").onclick=()=>{
+    if(!activeRitual) return;
+    state.ritualsDone[activeRitual]=true;
+    save();
+    toast("Touché. Scellé.");
+    vibrate([90,40,60]);
+  };
+  $("#btnChime").onclick=()=>{chime(); vibrate([40]);};
+  $("#btnLamp").onclick=()=>{
+    openModal("Geste inattendu", FEU.lamp.title, "Quantique concret, 20 secondes.",
+      `<div class="block"><div class="big">${FEU.lamp.steps}</div><div class="example">Exemple concret : ${FEU.lamp.ex}</div></div>`);
+  };
+
+  // fire state
+  $$(".pill[data-fire]").forEach(p=>{
+    p.onclick=()=>{state.fireState=p.dataset.fire; save(); toast("Feu mis à jour."); vibrate([70]);};
+  });
+
+  $("#btnToolDone").onclick=()=>{toast("Outil fait. Tenue +1."); vibrate([110,40,60]);};
+  $("#btnPointZero").onclick=()=>{
+    openModal("Ancrage", FEU.pointZero.title, "Deux secondes. Puis une action.",
+      `<div class="block"><div class="big">${FEU.pointZero.steps}</div><div class="example">Exemple concret : ${FEU.pointZero.ex}</div></div>`);
+  };
+  $("#btnRel").onclick=()=>{
+    openModal("Intelligence relationnelle", FEU.rel.title, "Pause. Présence. Proposition.",
+      `<div class="block"><div class="big">${FEU.rel.steps}</div></div>
+       <div class="divider"></div>
+       <div class="block"><div class="label">Scripts prêts</div>
+       <div class="list" style="margin-top:10px">
+         ${FEU.rel.scripts.map(s=>`<div class="example"><span class="label">${s.k}</span><div style="margin-top:6px">${s.t}</div></div>`).join("")}
+       </div></div>`);
+  };
+
+  // day done / notes
+  $("#btnDayDone").onclick=()=>{
+    state.dayDone[state.dayIndex]=true;
+    save();
+    toast("Accord scellé.");
+    vibrate([160,60,90]);
+  };
+  $("#btnNote").onclick=()=>{$("#noteBox").style.display=""; $("#noteText").focus();};
+  $("#btnCloseNote").onclick=()=>{$("#noteBox").style.display="none";};
+  $("#btnSaveNote").onclick=()=>{
+    state.notes[state.dayIndex]=$("#noteText").value||"";
+    save();
+    toast("Note enregistrée.");
+    vibrate([70,40,40]);
+  };
+
+  $("#btnShareMini").onclick=async ()=>{
+    const txt = `Semaine FEU. Sceau : ${computeSeal()}. Je chauffe la Vie, avec tenue.`;
+    try{ await navigator.clipboard.writeText(txt); toast("Texte copié."); }catch(e){ toast("Copie indisponible."); }
+  };
+
+  // challenge
+  $("#btnChallenge").onclick=()=>{
+    openModal("Défi", FEU.challenge.title, FEU.challenge.steps,
+      `<div class="block"><div class="big">${FEU.challenge.steps}</div><div class="example">Exemple concret : ${FEU.challenge.ex}</div>
+         <div class="divider"></div>
+         <div class="label">Coche</div>
+         <div class="pillset" style="margin-top:10px">
+           ${[0,1,2].map(i=>`<div class="pill ${state.challenge.done[i]?'sel':''}" data-chk="${i}">Réponse ${i+1}</div>`).join("")}
+         </div>
+       </div>`);
+    $$(".pill[data-chk]").forEach(p=>{
+      p.onclick=()=>{
+        const i=Number(p.dataset.chk);
+        state.challenge.done[i]=!state.challenge.done[i];
+        p.classList.toggle("sel", state.challenge.done[i]);
+        save();
+      };
+    });
+  };
+  $("#btn3P").onclick=()=>$("#btnRel").click();
+
+  // council shortcut
+  $("#btnCouncil").onclick=()=>{
+    setTab("week");
+    const done = state.dayDone.filter(Boolean).length;
+    if(done>=6) state.weeklyDone=true;
+    save();
+    toast("Conseil prêt.");
+  };
+  $("#btnCards").onclick=()=>setTab("rewards");
+
+  // rewards share
+  $("#btnShare").onclick=async ()=>{
+    const txt = `Semaine FEU, sceau obtenu : ${computeSeal()}.
+Je chauffe la Vie, avec tenue.`;
+    try{ await navigator.clipboard.writeText(txt); toast("Copié."); }catch(e){ toast("Copie indisponible."); }
+  };
+  $("#btnShare2").onclick=async ()=>{
+    const txt = `Semaine FEU, sceau obtenu : ${computeSeal()}.
+Je chauffe la Vie, avec tenue.`;
+    if(navigator.share){
+      try{ await navigator.share({text:txt}); }catch(e){}
+    }else{
+      try{ await navigator.clipboard.writeText(txt); toast("Copié."); }catch(e){ toast("Copie indisponible."); }
+    }
+  };
+
+  // settings
+  $("#btnReminderText").onclick=async ()=>{
+    const txt = `Rappels FEU • Axe Impeccable
+Matin : Note de tête (45s)
+Midi : Note de cœur (30s)
+Soir : Note de fond (60s)
+Phrase : La Vie est méditation.`;
+    try{ await navigator.clipboard.writeText(txt); toast("Texte copié."); }catch(e){ toast("Copie indisponible."); }
+  };
+  $("#btnExport").onclick=()=>{
+    const lines=[];
+    for(let i=0;i<7;i++){
+      if(state.notes[i]) lines.push(FEU.days[i].name+"\n"+state.notes[i]+"\n");
+    }
+    const blob=new Blob([lines.join("\n")||"Aucune note."], {type:"text/plain;charset=utf-8"});
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(blob);
+    a.download="notes-feu.txt";
+    a.click();
+    toast("Export généré.");
+  };
+  $("#btnReset").onclick=()=>{
+    openModal("Réinitialiser", "Réinitialiser la progression", "Efface les données locales de cette app.",
+      `<div class="block">
+         <div class="big">Tu peux repartir à zéro. La tenue reste.</div>
+         <div class="btnrow" style="margin-top:12px">
+           <div class="btn warn" id="doReset">Réinitialiser</div>
+           <div class="btn ghost" id="cancelReset">Annuler</div>
+         </div>
+       </div>`);
+    setTimeout(()=>{
+      const r=$("#doReset"); const c=$("#cancelReset");
+      if(r) r.onclick=()=>{state=structuredClone(defaultState); localStorage.removeItem(DATA_KEY); save(); closeModal(); toast("Réinitialisé.");};
+      if(c) c.onclick=()=>closeModal();
+    },0);
+  };
+
+  // modal close
+  $("#btnCloseModal").onclick=closeModal;
+  $("#modal").addEventListener("click", (e)=>{ if(e.target.id==="modal") closeModal(); });
+
+  // init
+  refreshAll();
+
+  // service worker
+  if("serviceWorker" in navigator){
+    navigator.serviceWorker.register("service-worker.js").catch(()=>{});
+  }
+</script>
+</body>
+</html>
